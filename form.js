@@ -1,45 +1,47 @@
-// Tutorial - https://youtu.be/VufN46OyFng
-
-// Targetting all classes & id from HTML
-
-let id = (id) => document.getElementById(id);
-
-let classes = (classes) => document.getElementsByClassName(classes);
-
-let username = id("username"),
-  email = id("email"),
-  password = id("password"),
-  form = id("form"),
-  errorMsg = classes("error"),
-  successIcon = classes("success-icon"),
-  failureIcon = classes("failure-icon");
-
-// Adding the submit event Listener
+const form = document.getElementById("form");
+const username = document.getElementById("username");
+const email = document.getElementById("email");
+const password = document.getElementById("password");
 
 form.addEventListener("submit", (e) => {
   e.preventDefault();
 
-  engine(username, 0, "Username cannot be blank");
-  engine(email, 1, "Email cannot be blank");
-  engine(password, 2, "Password cannot be blank");
+  validateInput(username, "Username cannot be blank");
+  validateEmail(email);
+  validateInput(password, "Password cannot be blank");
 });
 
-// engine function which will do all the works
-
-let engine = (id, serial, message) => {
-  if (id.value.trim() === "") {
-    errorMsg[serial].innerHTML = message;
-    id.style.border = "2px solid red";
-
-    // icons
-    failureIcon[serial].style.opacity = "1";
-    successIcon[serial].style.opacity = "0";
+function validateInput(input, message) {
+  const errorDiv = input.nextElementSibling.nextElementSibling.nextElementSibling;
+  if (input.value.trim() === "") {
+    showError(input, message, errorDiv);
   } else {
-    errorMsg[serial].innerHTML = "";
-    id.style.border = "2px solid green";
-
-    // icons
-    failureIcon[serial].style.opacity = "0";
-    successIcon[serial].style.opacity = "1";
+    showSuccess(input, errorDiv);
   }
-};
+}
+
+function validateEmail(input) {
+  const errorDiv = input.nextElementSibling.nextElementSibling.nextElementSibling;
+  const emailPattern = /^[^ ]+@[^ ]+\.[a-z]{2,3}$/;
+  if (input.value.trim() === "") {
+    showError(input, "Email cannot be blank", errorDiv);
+  } else if (!input.value.match(emailPattern)) {
+    showError(input, "Enter a valid email", errorDiv);
+  } else {
+    showSuccess(input, errorDiv);
+  }
+}
+
+function showError(input, message, errorDiv) {
+  input.classList.add("error-border");
+  input.nextElementSibling.style.opacity = "1"; // failure icon
+  input.nextElementSibling.nextElementSibling.style.opacity = "0"; // success icon
+  errorDiv.innerText = message;
+}
+
+function showSuccess(input, errorDiv) {
+  input.classList.remove("error-border");
+  input.nextElementSibling.style.opacity = "0"; // failure icon
+  input.nextElementSibling.nextElementSibling.style.opacity = "1"; // success icon
+  errorDiv.innerText = "";
+}
