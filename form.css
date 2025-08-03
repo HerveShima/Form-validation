@@ -37,7 +37,7 @@ body {
   background-size: contain;
   background-position: center;
   /* border: 2px solid black; */
-  height: 65%;
+  height: 60%;
 }
 
 .text {
@@ -211,3 +211,4 @@ button:hover {
     padding: 20px;
   }
 }
+
